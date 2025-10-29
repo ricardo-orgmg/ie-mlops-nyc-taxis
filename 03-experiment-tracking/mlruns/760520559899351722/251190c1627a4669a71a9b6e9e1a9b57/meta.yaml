@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/251190c1627a4669a71a9b6e9e1a9b57/artifacts
+end_time: 1761734654223
+entry_point_name: ''
+experiment_id: '760520559899351722'
+lifecycle_stage: active
+run_id: 251190c1627a4669a71a9b6e9e1a9b57
+run_name: youthful-bird-63
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761734652720
+status: 3
+tags: []
+user_id: oricardomg
