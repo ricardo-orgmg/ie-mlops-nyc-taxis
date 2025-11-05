@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/528250e86aad40b7ab67e99a73c24f45/artifacts
+end_time: 1761736061801
+entry_point_name: ''
+experiment_id: '760520559899351722'
+lifecycle_stage: active
+run_id: 528250e86aad40b7ab67e99a73c24f45
+run_name: loud-bug-616
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761736060280
+status: 3
+tags: []
+user_id: oricardomg

@@ -1,0 +1,10 @@
+artifact_location: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/models/m-c46f05d0648542a29d15eedf731f82e3/artifacts
+creation_timestamp: 1761736406317
+experiment_id: '760520559899351722'
+last_updated_timestamp: 1761736407477
+model_id: m-c46f05d0648542a29d15eedf731f82e3
+model_type: ''
+name: models
+source_run_id: 0115627eaa8247fa8850ad4377da0e11
+status: 2
+status_message: null

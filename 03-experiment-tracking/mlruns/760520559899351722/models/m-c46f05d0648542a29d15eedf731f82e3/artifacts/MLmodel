@@ -1,0 +1,32 @@
+artifact_path: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/models/m-c46f05d0648542a29d15eedf731f82e3/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+is_signature_from_type_hint: false
+mlflow_version: 3.5.1
+model_id: m-c46f05d0648542a29d15eedf731f82e3
+model_size_bytes: 928
+model_uuid: m-c46f05d0648542a29d15eedf731f82e3
+prompts: null
+run_id: 0115627eaa8247fa8850ad4377da0e11
+saved_input_example_info:
+  artifact_path: input_example.json
+  serving_input_path: serving_input_example.json
+  type: ndarray
+signature:
+  inputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1, 4]}}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-10-29 11:13:26.330162'

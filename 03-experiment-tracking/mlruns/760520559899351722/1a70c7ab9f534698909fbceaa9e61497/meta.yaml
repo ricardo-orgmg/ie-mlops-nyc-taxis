@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/1a70c7ab9f534698909fbceaa9e61497/artifacts
+end_time: 1761736027468
+entry_point_name: ''
+experiment_id: '760520559899351722'
+lifecycle_stage: active
+run_id: 1a70c7ab9f534698909fbceaa9e61497
+run_name: adorable-calf-494
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761736025811
+status: 3
+tags: []
+user_id: oricardomg

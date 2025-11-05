@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/50f185c51d2247869f82ebd30dd69f38/artifacts
+end_time: 1761736060279
+entry_point_name: ''
+experiment_id: '760520559899351722'
+lifecycle_stage: active
+run_id: 50f185c51d2247869f82ebd30dd69f38
+run_name: blushing-auk-814
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761736058146
+status: 3
+tags: []
+user_id: oricardomg

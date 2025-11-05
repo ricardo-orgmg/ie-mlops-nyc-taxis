@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/oricardomg/Documents/Documentos%20Master/2nd%20Term/MLOPS/ie-mlops-nyc-taxis/03-experiment-tracking/mlruns/760520559899351722/38e6ac7a0cc54ac694a892bb5eeb7b29/artifacts
+end_time: 1761736270770
+entry_point_name: ''
+experiment_id: '760520559899351722'
+lifecycle_stage: active
+run_id: 38e6ac7a0cc54ac694a892bb5eeb7b29
+run_name: valuable-zebra-256
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761736269574
+status: 3
+tags: []
+user_id: oricardomg
