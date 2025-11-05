@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/211857026049931141/3220a6d9be9b4ef69e0e652231406bae/artifacts
+end_time: 1762336597206
+entry_point_name: ''
+experiment_id: '211857026049931141'
+lifecycle_stage: active
+run_id: 3220a6d9be9b4ef69e0e652231406bae
+run_name: polite-squid-502
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762336595038
+status: 3
+tags: []
+user_id: oricardomg

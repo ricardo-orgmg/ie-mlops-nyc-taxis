@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000/")
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
 RUN_ID: Optional[str] = None
 model = None  # sklearn Pipeline (pyfunc)
 

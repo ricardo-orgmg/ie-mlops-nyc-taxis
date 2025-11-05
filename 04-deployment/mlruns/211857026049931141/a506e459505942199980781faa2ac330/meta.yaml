@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/211857026049931141/a506e459505942199980781faa2ac330/artifacts
+end_time: 1762336737947
+entry_point_name: ''
+experiment_id: '211857026049931141'
+lifecycle_stage: active
+run_id: a506e459505942199980781faa2ac330
+run_name: awesome-kit-487
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762336735829
+status: 3
+tags: []
+user_id: oricardomg
