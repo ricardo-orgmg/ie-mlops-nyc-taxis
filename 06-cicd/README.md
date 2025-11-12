@@ -1,162 +1,126 @@
+# 06 – CI/CD: Automated Training & Deployment with GitHub Actions
 
+This module uses a modern CI/CD pipeline that automates the training, packaging, and testing of our application. The main workflow (`ci-cd.yml`) calls a reusable training job, builds a self-contained Docker image with the model "baked in," and pushes it to the **GitHub Container Registry (GHCR)**.
 
-# MLOps NYC Taxis: Hands-On Roadmap
-
-This guide outlines a step-by-step, practical roadmap for building, tracking, and deploying a machine learning pipeline for NYC taxi trip duration prediction. Each step includes a clear goal, what to do, and what "done" looks like.
-
----
-
-## Prerequisites
-
-Before you begin, ensure you have the following tools installed and configured on your system.
-
-*   **Python (3.10 or newer):** The core programming language for the project.
-    *   **To Install:** Download from [python.org](https://www.python.org/downloads/).
-    *   **To Verify:** Open a terminal and run `python --version`.
-
-*   **Git:** The version control system used to manage the project's source code.
-    *   **To Install:** Download from [git-scm.com](https://git-scm.com/downloads).
-    *   **To Verify:** Run `git --version`.
-
-*   **Docker Desktop:** This project uses Docker to containerize the model serving application (Step 4) and to easily run services like MLflow and Airflow locally.
-    *   **To Install:** Download from [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop).
-    *   **To Verify:** Run `docker --version`.
-
-*   **(Recommended) A Modern Code Editor:** We recommend using an editor with good Python support.
-    *   **Example:** [Visual Studio Code](https://code.visualstudio.com/) with the official [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python).
+Render is then used to pull this pre-built, validated image and run it as a live web service.
 
 ---
 
-## 0. Environment & Packaging (applies to all steps)
+## 🔁 Workflow Concept
 
+The process is a clean, automated flow for building and testing the application, followed by a manual deployment step on Render.
 
-**Goal:** Deterministic local runs and easy hand-off.
-
-**Do:**
-- Create a single virtual environment at the repo root.
-- Use `requirements.txt` to manage dependencies.
-- Ensure all code runs consistently across environments.
-
-**How to set up:**
-1. Create a virtual environment:  
-    `python -m venv .venv`
-2. Activate the environment:  
-    - **Windows:** `.\.venv\Scripts\activate`
-    - **macOS/Linux:** `source .venv/bin/activate`
-3. Install dependencies:  
-    `pip install -r requirements.txt`
-4. Check install:  
-    `python -c "import pandas,sklearn"`
-
-**Deliverable:**
-- `pip install -r requirements.txt` works and installs all dependencies.
-- `python -c "import pandas,sklearn"` runs without error.
-
+```
+Git Push
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ CI/CD Pipeline (ci-cd.yml)               │
+│                                          │
+│  1. Calls train.yml → creates artifact   │
+│  2. Lints & tests the code               │
+│  3. Builds & tests Docker image          │
+│  4. Pushes image to GHCR                 │
+│                                          │
+└──────────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ GitHub Container Registry (GHCR)         │
+│                                          │
+│  Stores the final, versioned image:      │
+│  ghcr.io/<user>/<repo>:latest            │
+│                                          │
+└──────────────────────────────────────────┘
+    │
+    ▼ (Manual Deploy on Render)
+┌──────────────────────────────────────────┐
+│ Render.com                               │
+│                                          │
+│  Pulls the image from GHCR and runs it   │
+│  as a live web service.                  │
+│                                          │
+└──────────────────────────────────────────┘
+```
 ---
 
-## 1. Initial Notebook (Baseline)
+## 🗂️ Key Files
 
-**Goal:** A repeatable, fully understood baseline.
+| File | Role |
+| :--- | :--- |
+| `train.py` | Trains the model and saves a production-ready copy to `models/model/`. |
+| `app.py` | FastAPI service that loads the local `models/model/` at startup. |
+| `test_api.py` | Automated tests run against the live Docker container to ensure quality. |
+| `.github/workflows/ci-cd.yml` | **The main orchestrator**: calls training, lints, builds, tests, and pushes the image. |
+| `.github/workflows/train.yml` | A **reusable component** dedicated solely to running `train.py`. |
+| `Dockerfile` | A blueprint to package the code and the trained model into one container. |
 
-**Do:**
-- Build a single notebook that:
-    - Loads data
-    - Creates a duration feature
-    - Filters outliers
-    - Applies one-hot encoding (DictVectorizer)
-    - Trains a LinearRegression model
-    - Splits train/val by month
-    - Computes RMSE and overlays histograms
-
-**Deliverable:**
-- Notebook runs top-to-bottom without hidden state.
-- Prints train/val RMSE and shows a side-by-side histogram.
-
----
-
-## 2. Data Sampling for Iteration
-
-**Goal:** Fast iteration on laptops.
-
-**Do:**
-- Add a single source of truth for config (CLI args or `config.yaml`).
-- Add toggles: `--sample-frac`, `--months 2024-01,2024-02`, `--categoricals PULocationID,DOLocationID`.
-- Keep preprocessing logic unchanged.
-
-**Deliverable:**
-- Running with `--sample-frac 0.1` is ~10× faster and produces the same pipeline/metrics fields.
-
----
-
-## 3. Experiment Tracking (MLflow)
-
-**Goal:** Compare runs, not screenshots.
-
-**Do:**
-- Log parameters (features, filters, months), metrics (train/val RMSE), and artifacts (vectorizer, model) with MLflow.
-- Start from the notebook or a minimal `train.py` script.
-
-**Deliverable:**
-- MLflow UI shows multiple runs with clear names and comparable metrics.
-
----
-
-## 4. Model Serving
-
-**Goal:** An API that predicts trip duration from JSON input.
-
-**Do:**
-- Use FastAPI with a Pydantic schema.
-- Load `model.bin` and `dv.bin`.
-- Implement `/predict` endpoint returning duration.
-- Containerize with a Dockerfile.
-
-**Deliverable:**
-- `curl` or Postman returns a prediction.
-- `docker run ...` works locally.
+**Note on `requirements.txt`:** There are two `requirements.txt` files. The one in the root directory is for your local development environment (`.venv`). The one inside `06-cicd/` is specifically for the `Dockerfile`, ensuring the container has only the dependencies it needs for production.
 
 ---
 
 
-## 5. Monitoring & Drift Detection
+## 🚀 First-Time Deployment Guide
 
-**Goal:** Observe the system after "go live".
+Follow these steps in order to deploy the project to your own Render account.
 
-**Do:**
-- Capture input features and predictions.
-- Use a batch job with Evidently to generate monitoring reports.
-- Produce a small HTML report.
+### 1️⃣ Validate Your Code Locally (Pre-Flight Check)
 
-**Deliverable:**
-- One HTML drift report for a day/week of traffic generated by Evidently.
+Before pushing your code, always run the linter locally on the application code. This catches style errors early and prevents the CI/CD pipeline from failing.
+
+From the root directory of the repository, run:
+```bash
+flake8 06-cicd
+```
+If this command shows no output, you are good to go!
+
+### 2️⃣ Commit and Push Your Code
+
+Commit and push all the latest files from this module to your GitHub repository's `main` branch.
+
+```bash
+git add .
+git commit -m "feat: Finalize CI/CD pipeline for module 06"
+git push origin main
+```
+This push will automatically trigger the CI/CD pipeline.
+
+### 3️⃣ Wait for the Pipeline to Succeed
+
+Go to your repository's **Actions** tab and wait for the **CI/CD Pipeline** to complete. This first run builds your Docker image and pushes it to GHCR, but it will be **private** by default.
+
+### 4️⃣ Make the Docker Image Public (One-Time Action)
+
+You must make the image package public so Render can access it.
+
+1.  On your repository's main page, go to the **Packages** section on the right sidebar.
+2.  Click on your image name (e.g., `ie-mlops-course`).
+3.  On the image's page, go to **Package settings**.
+4.  Scroll to the "Danger Zone" and change the visibility to **Public**.
+
+### 5️⃣ Create the Render Service
+
+1.  On the Render Dashboard, click **New → Web Service**.
+2.  Choose **"Deploy an existing image from a registry"**.
+3.  For the Image URL, enter `ghcr.io/<your-github-user>/<your-repo-name>` (all lowercase).
+4.  Give the service a name, select the **Free** instance type, and click **Create Web Service**.
+
+### 6️⃣ Verify Your Deployment
+
+Once Render is live (≈1–2 min), check the health endpoint. You can find your service's URL on the Render dashboard.
+
+```bash
+curl https://<your-service-name>.onrender.com/health
+```
+The response should show `"status":"ok"` and `"model_loaded":true`.
 
 ---
 
-## 6. CI/CD (GitHub Actions + GHCR + Render)
+## 🔄 How to Redeploy with Changes
 
-**Goal:** Automated training, testing, and image-based deployment with manual refresh on Render.
+1.  Make your code changes (`train.py`, `app.py`, etc.).
+2.  Run `flake8 06-cicd` locally to check for issues.
+3.  `git commit` and `git push` them to `main`.
+4.  Wait for the **CI/CD Pipeline** to complete successfully on GitHub.
+5.  Go to your Render dashboard, find your service, and click **Manual Deploy → Deploy latest commit**.
 
-**Do:**
-- `train.yml`: A reusable workflow that trains the model and saves it to `models/model/` (called by `ci-cd.yml`).
-- `ci-cd.yml`: The main orchestrator that calls training → lints & tests code → builds Docker image with the model baked in → pushes to GitHub Container Registry (`ghcr.io/<owner>/<repo>:latest` + commit SHA tag).
-- Create a Render web service from the existing GHCR image (not from source). Manual deploy to pull updates.
-
-**Deliverable:**
-- Green CI pipeline on every push.
-- Docker image published to GHCR with `:latest` and commit tags.
-- Live service on Render pulling the validated image.
-
----
-
----
-
-
-## Tips & Best Practices
-
-- **Single venv at repo root:** Use one environment for the whole project. Each module (01-initial-notebook, 02-data-sampling-features, etc.) contains its own notebooks and scripts.
-- **When to switch notebook → script?**
-    - For teaching: stay in the notebook through Step 2.
-    - For tracking/serving: introduce a minimal `train.py` script by Step 3 (can be called from the notebook with `!python train.py ...` or run directly).
-- **Config, not constants:** Move magic strings (months, filters, feature names) to CLI/`config.yaml` by Step 2.
-- **Data contract early:** Add a Pydantic model for `/predict` input in Step 4 and reuse the same fields in training to avoid train/serve skew.
-- **Artifacts:** Start saving `dv` and `model` in Step 3 to support serving (not needed in Step 1).
